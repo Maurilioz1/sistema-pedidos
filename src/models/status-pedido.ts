@@ -1,0 +1,1 @@
+export type StatusPedido = "pendente" | "pago" | "enviado" | "cancelado";

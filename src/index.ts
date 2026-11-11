@@ -1,14 +1,17 @@
+import { argv } from "node:process";
+
 import type { Produto } from "./models/produto";
 import type { Pedido, PedidoComObservacao } from "./models/pedido";
 import type { ElementoArray } from "./types/elemento-array";
 import type { SomenteLeitura } from "./types/somente-leitura";
 
-import { descreverStatusPedido } from "./pedidos/descrever-status-pedido";
-import { GerenciadorItensPedido } from "./pedidos/gerenciador-itens-pedido";
+import { StatusPedidoEnum } from "./models/status-pedido";
+import { obterPropriedade } from "./utils/obter-propriedade";
 import { resumirPedido } from "./pedidos/resumir-pedido";
 import { validarStatusPedido } from "./pedidos/validar-status-pedido";
+import { descreverStatusPedido } from "./pedidos/descrever-status-pedido";
+import { GerenciadorItensPedido } from "./pedidos/gerenciador-itens-pedido";
 import { consultarDisponibilidade } from "./produtos/consultar-disponibilidade";
-import { obterPropriedade } from "./utils/obter-propriedade";
 
 const produto: Produto = {
     id: 1,
@@ -46,18 +49,13 @@ const gerenciadorItens = GerenciadorItensPedido.criarComItens(...pedido.itens);
 const resumo = resumirPedido(pedido);
 const [idPedido, quantidadeItensResumo, statusPedido] = resumo;
 
-const statusRecebido: unknown = "pago";
+const statusRecebido = argv[2] ?? "pago";
 
-const statusPermitidos = [
-    "pendente",
-    "pago",
-    "enviado",
-    "cancelado",
-] as const;
+const statusPermitidos = Object.values(StatusPedidoEnum);
 
 type StatusPermitido = ElementoArray<typeof statusPermitidos>;
 
-const statusExemplo: StatusPermitido = "pago";
+const statusExemplo: StatusPermitido = StatusPedidoEnum.Pago;
 
 console.log("=== Produto ===");
 console.log(`Identificador: ${produto.id}`);

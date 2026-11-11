@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Depurar Sistema de Pedidos",
+            "type": "node",
+            "request": "launch",
+            "runtimeVersion": "24",
+            "program": "${workspaceFolder}/dist/index.js",
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "runtimeArgs": [
+                "--enable-source-maps"
+            ],
+            "args": [
+                "cancelado"
+            ]
+        }
+    ]
+}

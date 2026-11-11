@@ -9,10 +9,11 @@ O projeto tem foco na modelagem de dados, segurança de tipos e organização do
 - Etapa 1: Fundamentos e Modelagem Inicial.
 - Etapa 2: Estruturação de Contratos e Organização.
 - Etapa 3: Abstração e Reuso com Tipos.
+- Etapa 4: Configuração e Ambiente.
 
 ## Tecnologias
 
-- Node.js
+- Node.js 24
 - TypeScript
 - tsx
 - npm
@@ -43,7 +44,18 @@ A execução com `tsx` não verifica os tipos. Utilize `npm run check` para essa
 | `npm run build` | Verificar os tipos e gerar JavaScript em `dist`. |
 | `npm start` | Executar o JavaScript compilado. |
 
-Antes de usar `npm start`, execute `npm run build`.
+Antes de usar `npm start`, execute `npm run build`. Para testar um status recebido pelo terminal:
+
+```bash
+npm start -- cancelado
+npm start -- invalido
+```
+
+Sem argumento, o bloco de validação usa `pago`. O argumento não altera o status do pedido de exemplo.
+
+## Depuração no VS Code
+
+Com o Node 24 instalado pelo nvm, execute `npm run build`, marque um ponto de parada em `src/index.ts` e pressione **F5** na configuração **Depurar Sistema de Pedidos**. O perfil passa `cancelado` como argumento e usa os source maps para pausar no TypeScript original. Recompile após editar o código antes de iniciar outra sessão.
 
 ## Organização
 
@@ -54,7 +66,8 @@ Antes de usar `npm start`, execute `npm run build`.
 | `src/pedidos/` | Operações, validação de status e gerenciamento de itens. |
 | `src/types/` | Tipos genéricos reutilizáveis. |
 | `src/utils/` | Funções genéricas auxiliares. |
-| `src/index.ts` | Exemplos de uso e saída no terminal. |
+| `src/index.ts` | Exemplos de uso, leitura de argumento e saída no terminal. |
+| `.vscode/launch.json` | Perfil de depuração do build no VS Code. |
 
 ## Recursos implementados
 
@@ -78,10 +91,17 @@ Antes de usar `npm start`, execute `npm run build`.
 - Tratamento exaustivo de status com `never`.
 - Função genérica `obterPropriedade`, utilizando `keyof` e acesso indexado.
 - Uso de `typeof` para obter tipos a partir de variáveis.
-- Asserção `as const` para preservar os literais de uma tupla.
 - Mapped type `SomenteLeitura<T>`.
 - Tipo condicional `ElementoArray<T>`, utilizando `infer`.
 - Ausência de `any` no código implementado.
+
+### Configuração e ambiente
+
+- Compilação estrita para ES2022 e CommonJS.
+- Declarações de tipos do Node 24 com `@types/node`.
+- Entrada pelo terminal com `node:process` e valor padrão com `??`.
+- Enum de strings como fonte dos status, com união derivada por tipo literal de template.
+- Source maps no build e depuração do TypeScript original no VS Code.
 
 ## Validação
 
@@ -94,7 +114,7 @@ Também foram realizados testes temporários de compilação para conferir:
 - Rejeição de valores fora da união de status.
 - Detecção de casos não tratados no switch de status.
 
-Esses testes foram feitos manualmente. Não há uma suíte de testes automatizados.
+Esses testes foram feitos manualmente. Na etapa 4, também conferi a execução do build e a pausa do depurador em `src/index.ts` com o argumento `cancelado`. Não há uma suíte de testes automatizados.
 
 ## Limites atuais
 

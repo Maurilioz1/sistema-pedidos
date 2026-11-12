@@ -7,12 +7,12 @@ export interface Pedido {
     status: StatusPedido;
 }
 
+export interface ResumoPedido {
+    id: number;
+    quantidadeItens: number;
+    status: StatusPedido;
+}
+
 export type PedidoComObservacao = Pedido & {
     observacao: string;
 };
-
-export type ResumoPedido = [
-    id: number,
-    quantidadeItens: number,
-    status: StatusPedido,
-];

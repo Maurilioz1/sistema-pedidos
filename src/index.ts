@@ -46,8 +46,11 @@ const pedidoComObservacao: PedidoComObservacao = {
 
 const gerenciadorItens = GerenciadorItensPedido.criarComItens(...pedido.itens);
 
-const resumo = resumirPedido(pedido);
-const [idPedido, quantidadeItensResumo, statusPedido] = resumo;
+const {
+    id: idPedido,
+    quantidadeItens: quantidadeItensResumo,
+    status: statusPedido,
+} = resumirPedido(pedido);
 
 const statusRecebido = argv[2] ?? "pago";
 

@@ -10,6 +10,7 @@ O projeto tem foco na modelagem de dados, segurança de tipos e organização do
 - Etapa 2: Estruturação de Contratos e Organização.
 - Etapa 3: Abstração e Reuso com Tipos.
 - Etapa 4: Configuração e Ambiente.
+- Etapa 5: Evolução e Refatoração.
 
 ## Tecnologias
 
@@ -76,7 +77,7 @@ Com o Node 24 instalado pelo nvm, execute `npm run build`, marque um ponto de pa
 - Interfaces de produto, item e pedido.
 - União de literais para os status permitidos.
 - Interseção para pedidos com observação.
-- Tupla para o resumo do pedido.
+- Resumo do pedido com propriedades nomeadas: `id`, `quantidadeItens` e `status`.
 - Contrato de função para consultar disponibilidade.
 
 ### Organização e gerenciamento de itens
@@ -103,6 +104,11 @@ Com o Node 24 instalado pelo nvm, execute `npm run build`, marque um ponto de pa
 - Enum de strings como fonte dos status, com união derivada por tipo literal de template.
 - Source maps no build e depuração do TypeScript original no VS Code.
 
+### Evolução e refatoração
+
+- `resumirPedido` passou a retornar um objeto com propriedades nomeadas. O consumo deixou de depender da ordem dos elementos da tupla.
+- A migração de JavaScript não se aplicou: o código-fonte já estava em TypeScript, e o JavaScript em `dist` é gerado pelo compilador.
+
 ## Validação
 
 O projeto foi verificado com `npm run check` e executado com `npm run dev`.
@@ -115,6 +121,8 @@ Também foram realizados testes temporários de compilação para conferir:
 - Detecção de casos não tratados no switch de status.
 
 Esses testes foram feitos manualmente. Na etapa 4, também conferi a execução do build e a pausa do depurador em `src/index.ts` com o argumento `cancelado`. Não há uma suíte de testes automatizados.
+
+Na etapa 5, `npm run check`, `npm run build` e `npm start -- cancelado` passaram. Um teste manual com ID `42`, uma entrada com duas unidades e status `pendente` confirmou que o resumo preserva o ID e conta entradas na lista, sem somar unidades.
 
 ## Limites atuais
 

@@ -2,7 +2,7 @@
 
 Módulo de pedidos desenvolvido em TypeScript como projeto acadêmico do MBA em Engenharia de Front-End com IA.
 
-O projeto tem foco na modelagem de dados, segurança de tipos e organização do código. Os exemplos são executados pelo terminal.
+O projeto tem foco na modelagem de dados, na segurança de tipos e na organização do código. Os exemplos são executados pelo terminal.
 
 ## Etapas concluídas
 
@@ -21,7 +21,7 @@ O projeto tem foco na modelagem de dados, segurança de tipos e organização do
 
 ## Como executar
 
-Instale as dependências:
+Na raiz do projeto, instale as dependências:
 
 ```bash
 npm ci
@@ -33,41 +33,56 @@ Execute em modo de desenvolvimento:
 npm run dev
 ```
 
-O programa reinicia ao salvar alterações. Para encerrar, pressione Ctrl + C.
+O programa reinicia ao salvar alterações. Para encerrar, pressione **Ctrl + C**.
 
-A execução com `tsx` não verifica os tipos. Utilize `npm run check` para essa verificação.
+A execução com `tsx` não verifica os tipos. Use `npm run check` para essa verificação.
 
 ## Outros comandos
 
 | Comando | Finalidade |
 | --- | --- |
 | `npm run check` | Verificar os tipos sem gerar arquivos. |
-| `npm run build` | Verificar os tipos e gerar JavaScript em `dist`. |
-| `npm start` | Executar o JavaScript compilado. |
+| `npm run build` | Verificar os tipos e gerar JavaScript e source maps em `dist`. |
+| `npm start` | Executar o JavaScript compilado com suporte a source maps. |
 
-Antes de usar `npm start`, execute `npm run build`. Para testar um status recebido pelo terminal:
+Antes de usar `npm start`, execute `npm run build`. Para testar a validação de um status recebido pelo terminal:
 
 ```bash
 npm start -- cancelado
 npm start -- invalido
 ```
 
-Sem argumento, o bloco de validação usa `pago`. O argumento não altera o status do pedido de exemplo.
+Sem um argumento de status, o bloco de validação usa `pago`. O argumento não altera o status do pedido de exemplo.
+
+## Catálogo de exemplo
+
+Para buscar um produto fictício da DummyJSON e usá-lo no pedido de exemplo:
+
+```bash
+npm run build
+npm start -- cancelado --catalogo
+```
+
+Sem `--catalogo`, o exemplo usa um produto local e funciona sem conexão. No modo catálogo, a DummyJSON fornece o ID, o nome, o preço e o estoque inicial. O preço é exibido sem presumir a moeda, e falhas na consulta são informadas no terminal.
+
+Nos dois modos, o exemplo aplica a baixa dos itens do pedido em memória e exibe o estoque antes e depois. A disponibilidade é calculada após a baixa: o produto está disponível para venda quando resta pelo menos uma unidade.
 
 ## Depuração no VS Code
 
-Com o Node 24 instalado pelo nvm, execute `npm run build`, marque um ponto de parada em `src/index.ts` e pressione **F5** na configuração **Depurar Sistema de Pedidos**. O perfil passa `cancelado` como argumento e usa os source maps para pausar no TypeScript original. Recompile após editar o código antes de iniciar outra sessão.
+Com o Node 24 instalado pelo nvm, execute `npm run build` e marque um ponto de parada em `src/index.ts`. Selecione a configuração **Depurar Sistema de Pedidos** e pressione **F5**.
+
+O perfil passa `cancelado` como argumento e usa os source maps para pausar no TypeScript original enquanto o Node executa o JavaScript compilado. Recompile após editar o código antes de iniciar outra sessão.
 
 ## Organização
 
 | Caminho | Responsabilidade |
 | --- | --- |
 | `src/models/` | Interfaces e tipos do domínio. |
-| `src/produtos/` | Operações relacionadas a produtos. |
-| `src/pedidos/` | Operações, validação de status e gerenciamento de itens. |
+| `src/produtos/` | Consulta à DummyJSON, cálculo de disponibilidade e baixa de estoque por produto. |
+| `src/pedidos/` | Resumo de pedidos, validação de status, gerenciamento de itens e coordenação da baixa de estoque. |
 | `src/types/` | Tipos genéricos reutilizáveis. |
 | `src/utils/` | Funções genéricas auxiliares. |
-| `src/index.ts` | Exemplos de uso, leitura de argumento e saída no terminal. |
+| `src/index.ts` | Exemplo de uso, leitura de argumentos e saída no terminal. |
 | `.vscode/launch.json` | Perfil de depuração do build no VS Code. |
 
 ## Recursos implementados
@@ -90,11 +105,11 @@ Com o Node 24 instalado pelo nvm, execute `npm run build`, marque um ponto de pa
 
 - Validação de valores `unknown` com predicado de tipo.
 - Tratamento exaustivo de status com `never`.
-- Função genérica `obterPropriedade`, utilizando `keyof` e acesso indexado.
+- Função genérica `obterPropriedade`, com `keyof` e acesso indexado.
 - Uso de `typeof` para obter tipos a partir de variáveis.
 - Mapped type `SomenteLeitura<T>`.
-- Tipo condicional `ElementoArray<T>`, utilizando `infer`.
-- Ausência de `any` no código implementado.
+- Tipo condicional `ElementoArray<T>`, com `infer`.
+- Ausência de `any` explícito no código implementado.
 
 ### Configuração e ambiente
 
@@ -107,27 +122,36 @@ Com o Node 24 instalado pelo nvm, execute `npm run build`, marque um ponto de pa
 ### Evolução e refatoração
 
 - `resumirPedido` passou a retornar um objeto com propriedades nomeadas. O consumo deixou de depender da ordem dos elementos da tupla.
-- A migração de JavaScript não se aplicou: o código-fonte já estava em TypeScript, e o JavaScript em `dist` é gerado pelo compilador.
+- A migração de JavaScript para TypeScript não se aplicou: o código-fonte já estava em TypeScript, e o JavaScript em `dist` é gerado pelo compilador.
+
+### Disponibilidade e estoque
+
+- A disponibilidade é calculada com base no estoque atual do produto.
+- A baixa exige uma quantidade inteira segura e positiva, além de estoque suficiente.
+- As baixas são simuladas antes de atualizar os produtos. Se algum item for rejeitado durante a simulação, nenhum estoque é alterado.
 
 ## Validação
 
-O projeto foi verificado com `npm run check` e executado com `npm run dev`.
+O projeto foi verificado com `npm run check` e `npm run build`. O exemplo foi executado com `npm run dev` e `npm start`. Também foi confirmada a pausa do depurador em `src/index.ts` com o argumento `cancelado`.
 
-Também foram realizados testes temporários de compilação para conferir:
+As verificações de tipos foram exercitadas manualmente para confirmar:
 
 - Rejeição de propriedades inexistentes.
 - Bloqueio de alterações em propriedades somente leitura.
 - Rejeição de valores fora da união de status.
-- Detecção de casos não tratados no switch de status.
+- Detecção de casos não tratados no `switch` de status.
 
-Esses testes foram feitos manualmente. Na etapa 4, também conferi a execução do build e a pausa do depurador em `src/index.ts` com o argumento `cancelado`. Não há uma suíte de testes automatizados.
+O sistema também valida em tempo de execução o status recebido pelo terminal, os campos `id`, `title`, `price` e `stock` da DummyJSON e a quantidade solicitada na baixa de estoque.
 
-Na etapa 5, `npm run check`, `npm run build` e `npm start -- cancelado` passaram. Um teste manual com ID `42`, uma entrada com duas unidades e status `pendente` confirmou que o resumo preserva o ID e conta entradas na lista, sem somar unidades.
+Dois testes manuais verificaram o comportamento do módulo:
+
+- Um pedido de ID `42`, com uma entrada contendo duas unidades e status `pendente`, confirmou que o resumo preserva o ID e conta **entradas na lista**, sem somar as unidades.
+- Um pedido com dois produtos foi rejeitado por falta de estoque no segundo item. A conferência confirmou que o estoque dos dois produtos permaneceu intacto.
+
+Não há uma suíte de testes automatizados.
 
 ## Limites atuais
 
-A disponibilidade do produto é definida manualmente. Controle de estoque, persistência e interface visual não foram implementados.
+O estoque é mantido em memória. As baixas valem apenas durante a execução atual. Ao reiniciar, o programa usa novamente o estoque inicial do produto local ou consulta a DummyJSON para obter o estoque inicial do produto externo.
 
-Os tipos não substituem validações durante a execução. A validação de entrada implementada contempla os valores de status.
-
-O tipo `SomenteLeitura<T>` oferece proteção superficial durante a verificação do TypeScript; ele não congela objetos em tempo de execução.
+O projeto é demonstrado pelo terminal. O tipo `SomenteLeitura<T>` oferece proteção superficial durante a verificação do TypeScript e não congela objetos em tempo de execução.

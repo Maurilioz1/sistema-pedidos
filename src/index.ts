@@ -27,9 +27,9 @@ async function main(): Promise<void> {
             estoque: 10,
         };
 
-    const produtoParaConsulta: SomenteLeitura<typeof produto> = {
+    const produtoParaConsulta: SomenteLeitura<typeof produto> = Object.freeze({
         ...produto,
-    };
+    });
 
     const nomeProduto = obterPropriedade(produto, "nome");
 

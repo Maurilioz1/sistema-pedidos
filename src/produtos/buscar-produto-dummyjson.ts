@@ -25,7 +25,7 @@ export async function buscarProdutoDummyJson(id: number): Promise<Produto> {
         dados.price < 0 ||
         !("stock" in dados) ||
         typeof dados.stock !== "number" ||
-        !Number.isInteger(dados.stock) ||
+        !Number.isSafeInteger(dados.stock) ||
         dados.stock < 0
     ) {
         throw new Error("A DummyJSON retornou um produto em formato inesperado.");

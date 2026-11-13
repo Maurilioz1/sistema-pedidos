@@ -11,6 +11,7 @@ O projeto tem foco na modelagem de dados, na segurança de tipos e na organizaç
 - Etapa 3: Abstração e Reuso com Tipos.
 - Etapa 4: Configuração e Ambiente.
 - Etapa 5: Evolução e Refatoração.
+- Etapa 6: Uso de Inteligência Artificial.
 
 ## Tecnologias
 
@@ -126,6 +127,10 @@ O perfil passa `cancelado` como argumento. Os source maps permitem que o depurad
 - A disponibilidade é calculada a partir do estoque atual do produto.
 - O estoque deve ser um inteiro seguro e não negativo. A quantidade solicitada deve ser um inteiro seguro e positivo.
 - A baixa só é aplicada se houver unidades suficientes. As baixas de um pedido são simuladas antes de atualizar os produtos; se algum item for rejeitado durante a simulação, nenhum estoque é alterado.
+
+## Uso de Inteligência Artificial
+
+Usei o ChatGPT (Codex) para apoiar a organização do código e a análise de erros de compilação. Avaliei as sugestões antes de adotá-las. As mudanças foram conferidas com a checagem de tipos, o build e testes manuais.
 
 ## Validação
 
